@@ -1,0 +1,22 @@
+{
+  "name": "gitbook-plugin-discourse",
+  "description": "plugin for GitBook to post heading to discourse",
+  "main": "index.js",
+  "version": "0.0.1",
+  "engines": {
+    "gitbook": "*"
+  },
+  "homepage": "https://github.com/g0v",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/g0v/gitbook-plugin-discourse.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/g0v/gitbook-plugin-discourse/issues"
+  },
+  "dependencies": {
+    "cheerio": "^0.18.0",
+    "discourse-api": "0.0.12"
+  }
+}
