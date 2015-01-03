@@ -4,14 +4,14 @@ var cheerio = require("cheerio");
 var Discourse = require("discourse-api");
 var api;
 
-function extractContent (content) {
+function extractContent (content, parent_category_id) {
     var $ = cheerio.load(content, {decodeEntities: false});
     var category = $('h1').text().trim();
     var titles = $.html().trim().match(/<h2.+>(.+)<\/h2>/g);
     var raws = [];
 
     //產生子分類
-    api.post('categories', {name: category, color: 'BF1E2E', text_color: 'FFFFFF', parent_category_id: 7}, function (err, body, httpCode){
+    api.post('categories', {name: category, color: 'BF1E2E', text_color: 'FFFFFF', parent_category_id: parent_category_id}, function (err, body, httpCode){
         console.log(httpCode);
     });
 
@@ -59,7 +59,7 @@ module.exports = {
             api = new Discourse(config.url, config.api_key, config.api_username);
 
             if(page.progress.current.level !== '0') {
-                extractContent(page.sections[0].content);
+                extractContent(page.sections[0].content, config.parent_category_id);
             }
             return page;
         }

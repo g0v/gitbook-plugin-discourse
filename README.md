@@ -30,7 +30,8 @@ You can configure the plugin is `book.json`:
         "discourse": {
             "url": "DISCOURSE_URL",
             "api_key": "API_KEY",
-            "api_username": "API_USERNAME"
+            "api_username": "API_USERNAME",
+            "parent_category_id": PARENT_CATREGORY_ID
         }
     }
 }
