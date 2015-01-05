@@ -8,7 +8,7 @@ function extractContent (content, parent_category_id) {
     var titles = $.html().trim().match(/<h2.+>(.+)<\/h2>/g);
     var raws = [];
     // 產生子分類
-    var res = api.postSync('categories', {name: category, color: 'BF1E2E', text_color: 'FFFFFF', parent_category_id: parent_category_id});
+    var res = api.postSync('categories', {name: category, color: (~~(Math.random()*(1<<24))).toString(16), text_color: 'FFFFFF', parent_category_id: parent_category_id});
     if(res.statusCode !== 200) {
         console.log(category + ":", JSON.parse(res.body.toString()).errors[0]);
     }
