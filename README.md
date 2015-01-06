@@ -31,11 +31,14 @@ You can configure the plugin is `book.json`:
             "url": "DISCOURSE_URL",
             "api_key": "API_KEY",
             "api_username": "API_USERNAME",
-            "parent_category_id": PARENT_CATREGORY_ID
+            "parent_category_id": PARENT_CATEGORY_ID,
+            "parent_category_name": PARENT_CATEGORY_NAME
         }
     }
 }
 ```
+
+you can also set environment var, `API_KEY=xxxx`.
 
 ## Licence
 
