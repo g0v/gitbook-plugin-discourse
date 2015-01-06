@@ -1,27 +1,20 @@
-var cheerio = require("cheerio");
 var Discourse = require("discourse-api");
 var api;
 
 function extractContent (content, parent_category_id) {
-    var $ = cheerio.load(content, {decodeEntities: false});
-    var category = $('h1').text().trim();
-    var titles = $.html().trim().match(/<h2.+>(.+)<\/h2>/g);
-    var raws = [];
-    // 產生子分類
+    var category = content.match(/^#\ (.+)\n/)[1];
+    var titles = content.match(/##\ .+\n/g).map(function (title) {
+        return title.replace('## ', '').replace('\n','');
+    });
+    var raws = content.split(/##\ .+\n\n/);
+
+    // Create subcategory
     var res = api.postSync('categories', {name: category, color: (~~(Math.random()*(1<<24))).toString(16), text_color: 'FFFFFF', parent_category_id: parent_category_id});
     if(res.statusCode !== 200) {
         console.log(category + ":", JSON.parse(res.body.toString()).errors[0]);
     }
 
-    // 處理 title
-    titles = titles.map(function (h2) {
-        return h2.replace(/<h2.+>(.+)<\/h2>/, function (ma, title) {
-            return title;
-        });
-    });
-
-    // 處理內文
-    raws = $.html().trim().split(/<h2.+>.+<\/h2>\n/);
+    // Create Topics
     raws.shift();
     raws.forEach(function (raw, index) {
         res = api.postSync('posts', { 'title': titles[index], 'raw': raw, 'category': category, 'archetype': 'regular' });
@@ -49,15 +42,15 @@ module.exports = {
         }
     },
     hooks: {
-        // After html generation
-        "page:after": function(page) {
+        // Post to discourse using markdown
+        "page:before": function(page) {
             var config = this.options.pluginsConfig.discourse;
             if (!config) {
                 throw "Need to configure discourse option";
             }
             api = new Discourse(config.url, config.api_key, config.api_username);
             if(page.progress.current.level !== '0') {
-                extractContent(page.sections[0].content, config.parent_category_id);
+                extractContent(page.content, config.parent_category_id);
             }
             return page;
         }

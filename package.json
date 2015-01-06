@@ -2,7 +2,7 @@
   "name": "gitbook-plugin-discourse",
   "description": "plugin for GitBook to post heading to discourse",
   "main": "index.js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
     "gitbook": "*"
   },
@@ -16,7 +16,6 @@
     "url": "https://github.com/g0v/gitbook-plugin-discourse/issues"
   },
   "dependencies": {
-    "cheerio": "^0.18.0",
     "discourse-api": "git://github.com/yhsiang/discourse-api#sync"
   }
 }
