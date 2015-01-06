@@ -38,7 +38,7 @@ You can configure the plugin is `book.json`:
 }
 ```
 
-you can also set environment var, `API_KEY=xxxx`.
+you can also set environment var `API_KEY=xxxx` and keep config value empty like `"api_key": ""`.
 
 ## Licence
 
