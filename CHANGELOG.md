@@ -1,9 +1,15 @@
+## 0.0.6
+
+Features:
+  - update post about README every time when rebuild
+
 ## 0.0.5
 
 Features:
 
   - update posts every time when rebuild
   - move new api instance to init function
+  - support API_KEY environment variable
 
 ## 0.0.4
 

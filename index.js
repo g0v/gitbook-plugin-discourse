@@ -12,7 +12,7 @@ function extractContent (content, parent_category_id) {
 
     // Find post's id
     titles.forEach(function (title) {
-        ids = topics.filter(function (topic) {
+        var ids = topics.filter(function (topic) {
             return topic.fancy_title === title;
         });
         if(ids.length > 0) {
@@ -36,6 +36,17 @@ function extractContent (content, parent_category_id) {
             if(res.statusCode === 200) console.log(titles[index], "updated!");
         }
     });
+}
+
+function updateReadme(content, parent_category_name) {
+    var ids = topics.filter( function (topic) {
+        return topic.title === parent_category_name;
+    });
+    var res = api.getSync('t/topic/' + ids[0].id + '.json');
+
+    post_id = JSON.parse(res.body.toString()).post_stream.posts[0].id;
+    res = api.updatePostSync(post_id, content, 'Rebuild');
+    if(res.statusCode === 200) console.log(parent_category_name, "updated!");
 }
 
 module.exports = {
@@ -69,9 +80,13 @@ module.exports = {
 
         "page:before": function(page) {
             var config = this.options.pluginsConfig.discourse;
+
             if(page.progress.current.level !== '0') {
                 extractContent(page.content, config.parent_category_id);
+            } else {
+                updateReadme(page.content, config.parent_category_name);
             }
+
             return page;
         }
     }
