@@ -1,3 +1,10 @@
+## 0.0.5
+
+Features:
+
+  - update posts every time when rebuild
+  - move new api instance to init function
+
 ## 0.0.4
 
 Features:

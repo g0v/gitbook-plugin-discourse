@@ -1,25 +1,39 @@
 var Discourse = require("discourse-api");
 var api;
+var topics = {};
 
 function extractContent (content, parent_category_id) {
+    var matchedId = {};
     var category = content.match(/^#\ (.+)\n/)[1];
     var titles = content.match(/##\ .+\n/g).map(function (title) {
-        return title.replace('## ', '').replace('\n','');
+        return title.replace('## ', '').replace('\n','').replace(/\./g,'');
     });
     var raws = content.split(/##\ .+\n\n/);
 
+    // Find post's id
+    titles.forEach(function (title) {
+        ids = topics.filter(function (topic) {
+            return topic.fancy_title === title;
+        });
+        if(ids.length > 0) {
+            matchedId[title] = ids[0].id;
+        }
+    });
+
     // Create subcategory
     var res = api.postSync('categories', {name: category, color: (~~(Math.random()*(1<<24))).toString(16), text_color: 'FFFFFF', parent_category_id: parent_category_id});
-    if(res.statusCode !== 200) {
-        console.log(category + ":", JSON.parse(res.body.toString()).errors[0]);
+    if(res.statusCode === 200) {
+        console.log(category, "created!");
     }
 
     // Create Topics
     raws.shift();
     raws.forEach(function (raw, index) {
-        res = api.postSync('posts', { 'title': titles[index], 'raw': raw, 'category': category, 'archetype': 'regular' });
-        if(res.statusCode !== 200) {
-            console.log(titles[index] + ":", JSON.parse(res.body.toString()).errors[0]);
+        var post_id = matchedId[titles[index]];
+        res = api.createTopicSync(titles[index], raw, category);
+        if(res.statusCode === 422) {
+            res = api.updatePostSync(post_id, raw, 'Rebuild');
+            if(res.statusCode === 200) console.log(titles[index], "updated!");
         }
     });
 }
@@ -43,12 +57,18 @@ module.exports = {
     },
     hooks: {
         // Post to discourse using markdown
-        "page:before": function(page) {
+        "init": function () {
             var config = this.options.pluginsConfig.discourse;
             if (!config) {
                 throw "Need to configure discourse option";
             }
-            api = new Discourse(config.url, config.api_key, config.api_username);
+            api = new Discourse(config.url, config.api_key || process.env.API_KEY, config.api_username);
+            res = api.getCreatedTopicsSync();
+            topics = (JSON.parse(res.body.toString())).topic_list.topics;
+        },
+
+        "page:before": function(page) {
+            var config = this.options.pluginsConfig.discourse;
             if(page.progress.current.level !== '0') {
                 extractContent(page.content, config.parent_category_id);
             }
