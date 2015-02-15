@@ -82,7 +82,7 @@ module.exports = {
 
         "page:before": function(page) {
             var config = this.options.pluginsConfig.discourse;
-            if (!(config.api_key || process.env.API_KEY)) { console.log("API_KEY environment not defined, skipping"); return; }
+            if (!(config.api_key || process.env.API_KEY)) { console.log("API_KEY environment not defined, skipping"); return page; }
 
             if(page.progress.current.level !== '0') {
                 extractContent(page.content, config.parent_category_id);
