@@ -73,6 +73,8 @@ module.exports = {
             if (!config) {
                 throw "Need to configure discourse option";
             }
+            if (!(config.api_key || process.env.API_KEY)) { console.log("API_KEY environment not defined, skipping"); return; }
+
             api = new Discourse(config.url, config.api_key || process.env.API_KEY, config.api_username);
             res = api.getCreatedTopicsSync();
             topics = (JSON.parse(res.body.toString())).topic_list.topics;
@@ -80,6 +82,7 @@ module.exports = {
 
         "page:before": function(page) {
             var config = this.options.pluginsConfig.discourse;
+            if (!(config.api_key || process.env.API_KEY)) { console.log("API_KEY environment not defined, skipping"); return; }
 
             if(page.progress.current.level !== '0') {
                 extractContent(page.content, config.parent_category_id);
