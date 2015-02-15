@@ -32,7 +32,7 @@ You can configure the plugin is `book.json`:
             "api_key": "API_KEY",
             "api_username": "API_USERNAME",
             "parent_category_id": PARENT_CATEGORY_ID,
-            "parent_category_name": PARENT_CATEGORY_NAME
+            "parent_category_name": "PARENT_CATEGORY_NAME"
         }
     }
 }
