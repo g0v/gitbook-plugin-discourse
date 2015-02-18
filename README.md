@@ -1,6 +1,6 @@
 # Heading post to discourse for GitBook
 
-This plugin allows you to post content to discourse.
+This plugin allows you to synchronise content to discourse.
 
 ## Installation
 
@@ -39,6 +39,13 @@ You can configure the plugin is `book.json`:
 ```
 
 you can also set environment var `API_KEY=xxxx` and keep config value empty like `"api_key": ""`.
+
+## Finding `parent_category_id`
+
+Once you create a category, it'll have an URL like https://talk.vtaiwan.tw/c/6-category.json — the 6 is the ID.
+
+If you have assigned the category a short name, such as https://talk.vtaiwan.tw/c/personal-data-protection, add a .json to the URL and see https://talk.vtaiwan.tw/c/personal-data-protection.json for the category_id field (which is 22 in this example.)
+
 
 ## Licence
 
